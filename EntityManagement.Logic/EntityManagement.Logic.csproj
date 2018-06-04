@@ -25,6 +25,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntityManagement.Models" Version="0.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.6.0">
       <ExcludeAssets>all</ExcludeAssets>
@@ -36,7 +37,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EntityManagement.Data\EntityManagement.Data.csproj" />
-    <ProjectReference Include="..\EntityManagement.Models\EntityManagement.Models.csproj" />
   </ItemGroup>
 
 </Project>
