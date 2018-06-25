@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EntityManagement.Models;
 
-namespace EntityManagement.Data
+namespace EntityManagement.Core
 {
     /// <summary>
     /// Entity Repository Interface
@@ -24,7 +23,7 @@ namespace EntityManagement.Data
         /// Retrieves the entity with the specified ID
         /// </summary>
         /// <param name="id">ID of entity to retrieve</param>
-        /// <returns>Entity if it exists, otherwise null</returns>
+        /// <returns>Asychronous task containing the entity if it exists, otherwise null</returns>
         Task<T> RetrieveById(TId id);
 
         /// <summary>

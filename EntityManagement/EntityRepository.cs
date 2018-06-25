@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EntityManagement.Models;
+using EntityManagement.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace EntityManagement.Data
@@ -63,10 +63,10 @@ namespace EntityManagement.Data
         }
 
         /// <summary>
-        /// Creates a new entity
+        /// Creates the specified entity
         /// </summary>
         /// <param name="entity">Entity to create</param>
-        /// <returns>Task to enable asynchronous execution</returns>
+        /// <returns>Asychronous task</returns>
         public async Task Create(TEntity entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
@@ -80,7 +80,7 @@ namespace EntityManagement.Data
         /// Updates the specified entity
         /// </summary>
         /// <param name="entity">Entity to update</param>
-        /// <returns>Task to enable asynchronous execution</returns>
+        /// <returns>Asychronous task</returns>
         public async Task Update(TEntity entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
@@ -124,7 +124,7 @@ namespace EntityManagement.Data
 
                 if (Context.AttachedRepositories == 0 && Context is IDisposable)
                 {
-                    ((IDisposable)Context).Dispose();
+                    Context.Dispose();
                     Context = null;
                 }
             }
