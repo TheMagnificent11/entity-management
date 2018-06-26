@@ -8,11 +8,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		CodeAnalysis.ruleset = CodeAnalysis.ruleset
+		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityManagement.Core", "EntityManagement.Core\EntityManagement.Core.csproj", "{CF983F8D-9276-4D3A-919C-B0CCF6857E7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityManagement.Core", "EntityManagement.Core\EntityManagement.Core.csproj", "{CF983F8D-9276-4D3A-919C-B0CCF6857E7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityManagement", "EntityManagement\EntityManagement.csproj", "{8F950344-CED0-4897-8EC2-4827BC7D3F17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityManagement", "EntityManagement\EntityManagement.csproj", "{8F950344-CED0-4897-8EC2-4827BC7D3F17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

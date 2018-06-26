@@ -7,6 +7,8 @@
     <Authors>Saji Weerasingham</Authors>
     <Company>NA</Company>
     <Product>EntityManagement</Product>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -31,10 +33,7 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
       <ExcludeAssets>all</ExcludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\EntityManagement.Core\EntityManagement.Core.csproj" />
+    <PackageReference Include="EntityManagement.Core" Version="0.0.2" />
   </ItemGroup>
 
 </Project>
