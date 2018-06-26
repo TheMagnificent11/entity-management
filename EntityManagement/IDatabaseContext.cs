@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace EntityManagement.Data
+namespace EntityManagement
 {
     /// <summary>
     /// Database Context Interface
