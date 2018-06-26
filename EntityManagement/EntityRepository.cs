@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using EntityManagement.Core;
 using Microsoft.EntityFrameworkCore;
 
-namespace EntityManagement.Data
+namespace EntityManagement
 {
     /// <summary>
     /// Entity Repository
