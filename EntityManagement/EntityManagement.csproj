@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <PackageProjectUrl>https://github.com/TheMagnificent11/entity-management</PackageProjectUrl>
     <Authors>Saji Weerasingham</Authors>
     <Company>NA</Company>
