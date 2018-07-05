@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EntityManagement.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace EntityManagement
@@ -39,6 +38,15 @@ namespace EntityManagement
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Gets the database set for this repositories type of entity
+        /// </summary>
+        /// <returns>Database set of entities</returns>
+        public DbSet<TEntity> Entities()
+        {
+            return Context.EntitySet<TEntity>();
         }
 
         /// <summary>
