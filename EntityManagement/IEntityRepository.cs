@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
-namespace EntityManagement.Core
+namespace EntityManagement
 {
     /// <summary>
     /// Entity Repository Interface
@@ -13,6 +14,12 @@ namespace EntityManagement.Core
         where T : class, IEntity<TId>
         where TId : IComparable
     {
+        /// <summary>
+        /// Gets the database set for this repositories type of entity
+        /// </summary>
+        /// <returns>Database set of entities</returns>
+        DbSet<T> Entities();
+
         /// <summary>
         /// Retrieve all
         /// </summary>

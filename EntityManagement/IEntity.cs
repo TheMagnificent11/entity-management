@@ -1,4 +1,4 @@
-﻿namespace EntityManagement.Core
+﻿namespace EntityManagement
 {
     /// <summary>
     /// Entity Interface
