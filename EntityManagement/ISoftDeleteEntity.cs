@@ -1,4 +1,4 @@
-﻿namespace EntityManagement.Core
+﻿namespace EntityManagement
 {
     /// <summary>
     /// Soft Delete Entity Interface
