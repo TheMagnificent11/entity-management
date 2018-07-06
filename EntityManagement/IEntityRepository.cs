@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace EntityManagement
 {
@@ -15,12 +14,6 @@ namespace EntityManagement
         where TId : IComparable
     {
         /// <summary>
-        /// Gets the database set for this repositories type of entity
-        /// </summary>
-        /// <returns>Database set of entities</returns>
-        DbSet<T> Entities();
-
-        /// <summary>
         /// Retrieve all
         /// </summary>
         /// <returns>List of entities</returns>
@@ -32,6 +25,13 @@ namespace EntityManagement
         /// <param name="id">ID of entity to retrieve</param>
         /// <returns>Asychronous task containing the entity if it exists, otherwise null</returns>
         Task<T> RetrieveById(TId id);
+
+        /// <summary>
+        /// Executes a query on the entity table access by this repository
+        /// </summary>
+        /// <param name="query">Query specificiation</param>
+        /// <returns>Asychronous task containing the query result collection</returns>
+        Task<List<T>> Query(IQuerySpecification<T> query);
 
         /// <summary>
         /// Creates the specified entity

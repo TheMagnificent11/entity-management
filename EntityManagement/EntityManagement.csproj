@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.0.4</Version>
+    <Version>$(Version)</Version>
     <PackageProjectUrl>https://github.com/TheMagnificent11/entity-management</PackageProjectUrl>
     <Authors>Saji Weerasingham</Authors>
     <Company>NA</Company>

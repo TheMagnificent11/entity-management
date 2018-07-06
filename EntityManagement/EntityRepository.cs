@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,15 +42,6 @@ namespace EntityManagement
         }
 
         /// <summary>
-        /// Gets the database set for this repositories type of entity
-        /// </summary>
-        /// <returns>Database set of entities</returns>
-        public DbSet<TEntity> Entities()
-        {
-            return Context.EntitySet<TEntity>();
-        }
-
-        /// <summary>
         /// Retrieves all the entities
         /// </summary>
         /// <returns>A list of the entities</returns>
@@ -68,6 +60,35 @@ namespace EntityManagement
         {
             return Context.EntitySet<TEntity>()
                 .SingleOrDefaultAsync(i => i.Id.CompareTo(id) == 0);
+        }
+
+        /// <summary>
+        /// Executes a query on the entity table access by this repository
+        /// </summary>
+        /// <param name="query">Query specificiation</param>
+        /// <returns>Asychronous task containing the query result collection</returns>
+        public Task<List<TEntity>> Query(IQuerySpecification<TEntity> query)
+        {
+            if (query == null) throw new ArgumentNullException(nameof(query));
+            if (query.Criteria == null) throw new ArgumentException(nameof(query.Criteria));
+
+            if (query.Includes == null)
+            {
+                return Context.EntitySet<TEntity>()
+                    .Where(query.Criteria)
+                    .ToListAsync();
+            }
+            else
+            {
+                var queryableResultWithIncludes = query.Includes
+                    .Aggregate(
+                        Context.EntitySet<TEntity>().AsQueryable(),
+                        (current, include) => current.Include(include));
+
+                return queryableResultWithIncludes
+                    .Where(query.Criteria)
+                    .ToListAsync();
+            }
         }
 
         /// <summary>
