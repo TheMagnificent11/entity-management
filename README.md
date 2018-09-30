@@ -1,4 +1,4 @@
-# Entity Management uild Status](https://saji.visualstudio.com/727732a6-0b21-4bde-b137-4c5902252885/_apis/build/status/19)
+# Entity Management ![Build Status](https://saji.visualstudio.com/727732a6-0b21-4bde-b137-4c5902252885/_apis/build/status/19)
 Repository pattern that uses generics for entity types that can be used for Entity Framework Core data access.
 
 ## Dependencies
