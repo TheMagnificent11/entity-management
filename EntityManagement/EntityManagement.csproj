@@ -12,6 +12,7 @@
     <WarningsAsErrors />
     <DocumentationFile>bin\netstandard2.0\EntityManagment.xml</DocumentationFile>
     <CodeAnalysisRuleSet>..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

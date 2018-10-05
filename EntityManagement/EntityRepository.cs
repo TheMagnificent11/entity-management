@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,30 +45,35 @@ namespace EntityManagement
         /// <summary>
         /// Retrieves all the entities
         /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>A list of the entities</returns>
-        public Task<List<TEntity>> RetrieveAll()
+        public Task<List<TEntity>> RetrieveAll(CancellationToken cancellationToken = default)
         {
             return Context.EntitySet<TEntity>()
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
 
         /// <summary>
         /// Retrieves the entity with the specified ID
         /// </summary>
         /// <param name="id">ID of entity to retrieve</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Entity if it exists, otherwise null</returns>
-        public Task<TEntity> RetrieveById(TId id)
+        public Task<TEntity> RetrieveById(TId id, CancellationToken cancellationToken = default)
         {
             return Context.EntitySet<TEntity>()
-                .SingleOrDefaultAsync(i => i.Id.CompareTo(id) == 0);
+                .SingleOrDefaultAsync(i => i.Id.CompareTo(id) == 0, cancellationToken);
         }
 
         /// <summary>
         /// Executes a query on the entity table access by this repository
         /// </summary>
         /// <param name="query">Query specificiation</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Asychronous task containing the query result collection</returns>
-        public Task<List<TEntity>> Query(IQuerySpecification<TEntity> query)
+        public Task<List<TEntity>> Query(
+            IQuerySpecification<TEntity> query,
+            CancellationToken cancellationToken = default)
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
             if (query.Criteria == null) throw new ArgumentException(nameof(query.Criteria));
@@ -76,7 +82,7 @@ namespace EntityManagement
             {
                 return Context.EntitySet<TEntity>()
                     .Where(query.Criteria)
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
             }
             else
             {
@@ -87,7 +93,7 @@ namespace EntityManagement
 
                 return queryableResultWithIncludes
                     .Where(query.Criteria)
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
             }
         }
 
@@ -95,22 +101,24 @@ namespace EntityManagement
         /// Creates the specified entity
         /// </summary>
         /// <param name="entity">Entity to create</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Asychronous task</returns>
-        public async Task Create(TEntity entity)
+        public async Task Create(TEntity entity, CancellationToken cancellationToken = default)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
             Context.EntitySet<TEntity>().Add(entity);
 
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
         /// Updates the specified entity
         /// </summary>
         /// <param name="entity">Entity to update</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Asychronous task</returns>
-        public async Task Update(TEntity entity)
+        public async Task Update(TEntity entity, CancellationToken cancellationToken = default)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
@@ -119,21 +127,22 @@ namespace EntityManagement
 
             Context.Entry(existing).CurrentValues.SetValues(entity);
 
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
         /// Delete the entity with the specified ID
         /// </summary>
         /// <param name="id">ID of entity to delete</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Task to enable asynchronous execution</returns>
-        public async Task Delete(TId id)
+        public async Task Delete(TId id, CancellationToken cancellationToken = default)
         {
             var entity = await RetrieveById(id);
             if (entity == null) return;
 
             Context.EntitySet<TEntity>().Remove(entity);
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>

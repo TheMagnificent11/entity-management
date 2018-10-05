@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -40,7 +41,8 @@ namespace EntityManagement
         /// <summary>
         /// Saves all changes made in this context to the underlying database
         /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>The number of state entries written to the underlying database</returns>
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }
