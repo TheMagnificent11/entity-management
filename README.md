@@ -1,5 +1,8 @@
-# Entity Management ![Build Status](https://saji.visualstudio.com/727732a6-0b21-4bde-b137-4c5902252885/_apis/build/status/19)
+# Entity Management
 Repository pattern that uses generics for entity types that can be used for Entity Framework Core data access.
+
+## Build Status
+[![Build status](https://saji.visualstudio.com/Open%20Source/_apis/build/status/EntityManagement-import)](https://saji.visualstudio.com/Open%20Source/_build/latest?definitionId=25)
 
 ## Dependencies
 - .Net Standard 2.0
