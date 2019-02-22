@@ -1,5 +1,5 @@
 ﻿using System;
-using EntityManagement.Abstractions;
+using EntityManagement.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
