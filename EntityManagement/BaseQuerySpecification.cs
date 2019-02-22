@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using EntityManagement.Abstractions;
+using EntityManagement.Core;
 
 namespace EntityManagement
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EntityManagement.Abstractions;
+using EntityManagement.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace EntityManagement
