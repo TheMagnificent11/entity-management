@@ -6,7 +6,7 @@ Repository pattern that uses generics for entity types that can be used for Enti
 
 ## Dependencies
 - .Net Standard 2.0
-- Entity Framework Core 2.2
+- Entity Framework Core 3.1
 
 ## How To Use
 1. All data models that the you wish to access should implement `EntityManagement.IEntity`

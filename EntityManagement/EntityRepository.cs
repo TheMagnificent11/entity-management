@@ -23,8 +23,8 @@ namespace EntityManagement
         /// <param name="context">Database context</param>
         public EntityRepository(IDatabaseContext context)
         {
-            Context = context;
-            Context.AttachedRepositories++;
+            this.Context = context ?? throw new ArgumentNullException(nameof(context));
+            this.Context.AttachedRepositories++;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace EntityManagement
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -50,7 +50,7 @@ namespace EntityManagement
         /// <returns>A list of the entities</returns>
         public Task<List<TEntity>> RetrieveAll(CancellationToken cancellationToken = default)
         {
-            return Context.EntitySet<TEntity>()
+            return this.Context.EntitySet<TEntity>()
                 .ToListAsync(cancellationToken);
         }
 
@@ -62,7 +62,7 @@ namespace EntityManagement
         /// <returns>Entity if it exists, otherwise null</returns>
         public Task<TEntity> RetrieveById(TId id, CancellationToken cancellationToken = default)
         {
-            return Context.EntitySet<TEntity>()
+            return this.Context.EntitySet<TEntity>()
                 .SingleOrDefaultAsync(i => i.Id.CompareTo(id) == 0, cancellationToken);
         }
 
@@ -81,7 +81,7 @@ namespace EntityManagement
 
             if (query.Includes == null)
             {
-                return Context.EntitySet<TEntity>()
+                return this.Context.EntitySet<TEntity>()
                     .Where(query.Criteria)
                     .ToListAsync(cancellationToken);
             }
@@ -89,7 +89,7 @@ namespace EntityManagement
             {
                 var queryableResultWithIncludes = query.Includes
                     .Aggregate(
-                        Context.EntitySet<TEntity>().AsQueryable(),
+                        this.Context.EntitySet<TEntity>().AsQueryable(),
                         (current, include) => current.Include(include));
 
                 return queryableResultWithIncludes
@@ -108,9 +108,9 @@ namespace EntityManagement
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-            Context.EntitySet<TEntity>().Add(entity);
+            this.Context.EntitySet<TEntity>().Add(entity);
 
-            await Context.SaveChangesAsync(cancellationToken);
+            await this.Context.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
@@ -123,12 +123,12 @@ namespace EntityManagement
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-            var existing = await RetrieveById(entity.Id);
+            var existing = await this.RetrieveById(entity.Id);
             if (existing == null) return;
 
-            Context.Entry(existing).CurrentValues.SetValues(entity);
+            this.Context.Entry(existing).CurrentValues.SetValues(entity);
 
-            await Context.SaveChangesAsync(cancellationToken);
+            await this.Context.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
@@ -139,11 +139,11 @@ namespace EntityManagement
         /// <returns>Task to enable asynchronous execution</returns>
         public async Task Delete(TId id, CancellationToken cancellationToken = default)
         {
-            var entity = await RetrieveById(id);
+            var entity = await this.RetrieveById(id);
             if (entity == null) return;
 
-            Context.EntitySet<TEntity>().Remove(entity);
-            await Context.SaveChangesAsync(cancellationToken);
+            this.Context.EntitySet<TEntity>().Remove(entity);
+            await this.Context.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
@@ -154,21 +154,21 @@ namespace EntityManagement
         /// </param>
         protected virtual void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (this.Disposed) return;
             if (!disposing) return;
 
-            if (Context != null)
+            if (this.Context != null)
             {
-                Context.AttachedRepositories--;
+                this.Context.AttachedRepositories--;
 
-                if (Context.AttachedRepositories == 0 && Context is IDisposable)
+                if (this.Context.AttachedRepositories == 0 && this.Context is IDisposable)
                 {
-                    Context.Dispose();
-                    Context = null;
+                    this.Context.Dispose();
+                    this.Context = null;
                 }
             }
 
-            Disposed = true;
+            this.Disposed = true;
         }
     }
 }

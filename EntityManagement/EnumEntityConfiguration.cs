@@ -20,6 +20,11 @@ namespace EntityManagement
         /// <param name="builder">Table builder</param>
         public void Configure(EntityTypeBuilder<TEnumEntity> builder)
         {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
             builder.HasKey(i => i.Id);
 
             builder.Property(i => i.Id)
