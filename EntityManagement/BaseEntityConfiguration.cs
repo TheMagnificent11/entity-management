@@ -18,6 +18,11 @@ namespace EntityManagement
         /// <param name="builder">The builder to be used to configure the entity type</param>
         public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
+            if (builder is null)
+            {
+                throw new System.ArgumentNullException(nameof(builder));
+            }
+
             builder.HasKey(i => i.Id);
 
             builder.Property(i => i.CreatedBy)

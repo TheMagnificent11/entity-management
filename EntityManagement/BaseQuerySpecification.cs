@@ -18,8 +18,8 @@ namespace EntityManagement
         /// <param name="criteria">Query criteria</param>
         protected BaseQuerySpecification(Expression<Func<T, bool>> criteria)
         {
-            Criteria = criteria;
-            Includes = new List<Expression<Func<T, object>>>();
+            this.Criteria = criteria;
+            this.Includes = new List<Expression<Func<T, object>>>();
         }
 
         /// <summary>
@@ -31,8 +31,8 @@ namespace EntityManagement
             Expression<Func<T, bool>> criteria,
             List<Expression<Func<T, object>>> includes)
         {
-            Criteria = criteria;
-            Includes = includes;
+            this.Criteria = criteria;
+            this.Includes = includes;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace EntityManagement
         /// <param name="includeExpression">Include expression to include</param>
         protected void AddInclude(Expression<Func<T, object>> includeExpression)
         {
-            Includes.Add(includeExpression);
+            this.Includes.Add(includeExpression);
         }
     }
 }
