@@ -13,7 +13,7 @@ namespace EntityManagement
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     /// <typeparam name="TId">Entity Id type</typeparam>
-    public class EntityRepository<TEntity, TId> : IEntityRepository<TEntity, TId>, IDisposable
+    public class EntityRepository<TEntity, TId> : IEntityRepository<TEntity, TId>
         where TEntity : class, IEntity<TId>
         where TId : IComparable, IComparable<TId>, IEquatable<TId>, IConvertible
     {
@@ -24,24 +24,12 @@ namespace EntityManagement
         public EntityRepository(IDatabaseContext context)
         {
             this.Context = context ?? throw new ArgumentNullException(nameof(context));
-            this.Context.AttachedRepositories++;
         }
 
         /// <summary>
         /// Gets the database context
         /// </summary>
         protected IDatabaseContext Context { get; private set; }
-
-        private bool Disposed { get; set; }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
-        /// </summary>
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
 
         /// <summary>
         /// Retrieves all the entities
@@ -70,11 +58,8 @@ namespace EntityManagement
         /// Executes a query on the entity table access by this repository
         /// </summary>
         /// <param name="query">Query specificiation</param>
-        /// <param name="cancellationToken">Cancellation token</param>
-        /// <returns>Asychronous task containing the query result collection</returns>
-        public Task<List<TEntity>> Query(
-            IQuerySpecification<TEntity> query,
-            CancellationToken cancellationToken = default)
+        /// <returns>Queryable result collection</returns>
+        public IQueryable<TEntity> Query(IQuerySpecification<TEntity> query)
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
             if (query.Criteria == null) throw new ArgumentException(nameof(query.Criteria));
@@ -82,8 +67,7 @@ namespace EntityManagement
             if (query.Includes == null)
             {
                 return this.Context.EntitySet<TEntity>()
-                    .Where(query.Criteria)
-                    .ToListAsync(cancellationToken);
+                    .Where(query.Criteria);
             }
             else
             {
@@ -93,8 +77,7 @@ namespace EntityManagement
                         (current, include) => current.Include(include));
 
                 return queryableResultWithIncludes
-                    .Where(query.Criteria)
-                    .ToListAsync(cancellationToken);
+                    .Where(query.Criteria);
             }
         }
 
@@ -144,31 +127,6 @@ namespace EntityManagement
 
             this.Context.EntitySet<TEntity>().Remove(entity);
             await this.Context.SaveChangesAsync(cancellationToken);
-        }
-
-        /// <summary>
-        /// Releases the unmanaged resources that are used by the object and, optionally, releases the managed resources
-        /// </summary>
-        /// <param name="disposing">
-        /// True to release both managed and unmanaged resources; false to release only unmanaged resources
-        /// </param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (this.Disposed) return;
-            if (!disposing) return;
-
-            if (this.Context != null)
-            {
-                this.Context.AttachedRepositories--;
-
-                if (this.Context.AttachedRepositories == 0 && this.Context is IDisposable)
-                {
-                    this.Context.Dispose();
-                    this.Context = null;
-                }
-            }
-
-            this.Disposed = true;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -9,13 +8,8 @@ namespace EntityManagement
     /// <summary>
     /// Database Context Interface
     /// </summary>
-    public interface IDatabaseContext : IDisposable
+    public interface IDatabaseContext
     {
-        /// <summary>
-        /// Gets or sets the number of attached repositories
-        /// </summary>
-        int AttachedRepositories { get; set; }
-
         /// <summary>
         /// Gets the entity set for the specified entity type
         /// </summary>
