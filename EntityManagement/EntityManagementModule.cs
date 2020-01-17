@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Autofac.Core;
-using EntityManagement.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace EntityManagement
