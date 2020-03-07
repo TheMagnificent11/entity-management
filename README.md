@@ -2,7 +2,7 @@
 Repository pattern that uses generics for entity types that can be used for Entity Framework Core data access.
 
 ## Build Status
-[![Build status](https://saji.visualstudio.com/Open%20Source/_apis/build/status/EntityManagement-import)](https://saji.visualstudio.com/Open%20Source/_build/latest?definitionId=25)
+[![Build Status](https://saji.visualstudio.com/Open%20Source/_apis/build/status/EntityManagement?branchName=master)](https://saji.visualstudio.com/Open%20Source/_build/latest?definitionId=40&branchName=master)
 
 ## Dependencies
 - .Net Standard 2.0
