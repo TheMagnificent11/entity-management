@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -14,15 +13,15 @@ namespace EntityManagement
     public class DatabaseHealthCheck<TDbContext> : IHealthCheck
         where TDbContext : DbContext
     {
-        private readonly string connectionString;
+        private readonly TDbContext dbContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseHealthCheck{TDbContext}"/> class
         /// </summary>
-        /// <param name="connectionString">Database connection string</param>
-        public DatabaseHealthCheck(string connectionString)
+        /// <param name="dbContext">Database context</param>
+        public DatabaseHealthCheck(TDbContext dbContext)
         {
-            this.connectionString = connectionString;
+            this.dbContext = dbContext;
         }
 
         private static Type DbContextType => typeof(TDbContext);
@@ -30,7 +29,7 @@ namespace EntityManagement
         private static string HealthCheckName => $"DatabaseHealthCheck-{typeof(TDbContext).FullName}";
 
         /// <summary>
-        /// Runs the health check, returning the status of the component being checked
+        /// Runs a health check to determine database connectivity
         /// </summary>
         /// <param name="context">A context object associated with the current execution</param>
         /// <param name="cancellationToken">
@@ -57,40 +56,15 @@ namespace EntityManagement
         {
             try
             {
-                var databaseExists = await this.CheckIfDatabaseExists(cancellationToken);
+                var canConnect = await this.dbContext.Database.CanConnectAsync(cancellationToken);
 
-                return databaseExists
+                return canConnect
                     ? HealthCheckResult.Healthy($"{DbContextType.Name} is available.")
                     : HealthCheckResult.Unhealthy($"{DbContextType.Name} is unavailable.");
             }
             catch (Exception ex)
             {
                 return HealthCheckResult.Unhealthy(ex.Message);
-            }
-        }
-
-        private async Task<bool> CheckIfDatabaseExists(CancellationToken cancellationToken)
-        {
-            try
-            {
-                using (var connection = new SqlConnection(this.connectionString))
-                {
-                    await connection.OpenAsync(cancellationToken);
-
-                    using (var command = new SqlCommand("SELECT * FROM information_schema.tables where TABLE_SCHEMA != 'sys'", connection))
-                    using (var reader = await command.ExecuteReaderAsync(cancellationToken))
-                    {
-                        var result = await reader.ReadAsync(cancellationToken);
-                        if (!result)
-                            return false;
-                    }
-                }
-
-                return true;
-            }
-            catch (SqlException)
-            {
-                return false;
             }
         }
     }
