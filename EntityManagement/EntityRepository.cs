@@ -15,7 +15,7 @@ namespace EntityManagement
     /// <typeparam name="TId">Entity Id type</typeparam>
     public class EntityRepository<TEntity, TId> : IEntityRepository<TEntity, TId>
         where TEntity : class, IEntity<TId>
-        where TId : IComparable, IComparable<TId>, IEquatable<TId>, IConvertible
+        where TId : IComparable, IComparable<TId>, IEquatable<TId>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EntityRepository{TEntity,TId}" /> class
