@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EntityManagement
 {
@@ -17,20 +16,6 @@ namespace EntityManagement
         /// <returns>Database set</returns>
         DbSet<T> EntitySet<T>()
             where T : class;
-
-        /// <summary>
-        /// Gets an <see cref="EntityEntry"/> for the given entity
-        /// </summary>
-        /// <param name="entity">The entity to get the entry for</param>
-        /// <returns>The entry for the given entity</returns>
-        EntityEntry Entry(object entity);
-
-        /// <summary>
-        /// Begins tracking the given entity such that it will be updated in the database when changes are saved
-        /// </summary>
-        /// <param name="entity">Entity to update</param>
-        /// <returns>The entry for the given entity</returns>
-        EntityEntry Update(object entity);
 
         /// <summary>
         /// Saves all changes made in this context to the underlying database
