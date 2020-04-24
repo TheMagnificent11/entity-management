@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Autofac.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace EntityManagement
@@ -21,6 +22,12 @@ namespace EntityManagement
             builder.RegisterType<T>()
                 .Keyed<IDatabaseContext>(key)
                 .InstancePerLifetimeScope();
+
+            builder.RegisterGeneric(typeof(DatabaseContextScope<>))
+                .WithParameter(new ResolvedParameter(
+                    (info, context) => info.ParameterType == typeof(IDatabaseContext),
+                    (info, context) => context.ResolveKeyed<IDatabaseContext>(key)))
+                .As(typeof(IDatabaseContextScope<>));
         }
     }
 }
