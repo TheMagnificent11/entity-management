@@ -18,7 +18,7 @@ namespace EntityManagement
         /// Configures enum entity lookup database table
         /// </summary>
         /// <param name="builder">Table builder</param>
-        public void Configure(EntityTypeBuilder<TEnumEntity> builder)
+        public virtual void Configure(EntityTypeBuilder<TEnumEntity> builder)
         {
             if (builder is null)
             {
