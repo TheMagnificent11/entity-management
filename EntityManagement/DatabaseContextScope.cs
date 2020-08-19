@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,35 +31,6 @@ namespace EntityManagement
             where T : class
         {
             return this.context.EntitySet<T>();
-        }
-
-        /// <summary>
-        /// Executes a query on the entity table access by this repository
-        /// </summary>
-        /// <param name="query">Query specificiation</param>
-        /// <typeparam name="T">Entity type</typeparam>
-        /// <returns>Queryable result collection</returns>
-        public IQueryable<T> Query<T>(IQuerySpecification<T> query)
-            where T : class
-        {
-            if (query == null) throw new ArgumentNullException(nameof(query));
-            if (query.Criteria == null) throw new ArgumentException(nameof(query.Criteria));
-
-            if (query.Includes == null)
-            {
-                return this.context.EntitySet<T>()
-                    .Where(query.Criteria);
-            }
-            else
-            {
-                var queryableResultWithIncludes = query.Includes
-                    .Aggregate(
-                        this.context.EntitySet<T>().AsQueryable(),
-                        (current, include) => current.Include(include));
-
-                return queryableResultWithIncludes
-                    .Where(query.Criteria);
-            }
         }
 
         /// <summary>
