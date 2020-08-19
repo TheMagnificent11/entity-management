@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,15 +17,6 @@ namespace EntityManagement
         /// <typeparam name="T">Entity type</typeparam>
         /// <returns>Database set</returns>
         DbSet<T> EntitySet<T>()
-            where T : class;
-
-        /// <summary>
-        /// Executes a query on the entity table access by this repository
-        /// </summary>
-        /// <param name="query">Query specificiation</param>
-        /// <typeparam name="T">Entity type</typeparam>
-        /// <returns>Queryable result collection</returns>
-        IQueryable<T> Query<T>(IQuerySpecification<T> query)
             where T : class;
 
         /// <summary>
