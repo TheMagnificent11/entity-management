@@ -39,7 +39,7 @@ namespace SampleApiWebApp.Infrastructure
 
             Log.Logger = config.CreateLogger();
 
-            Log.Logger.Information($"================= Appliction Started =================");
+            Log.Logger.Information($"================= Application Started =================");
 
             services.AddLogging(builder => builder.AddSerilog(dispose: true));
         }

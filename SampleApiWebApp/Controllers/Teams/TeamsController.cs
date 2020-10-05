@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SampleApiWebApp.Constants;
+using SampleApiWebApp.Controllers.Teams.Post;
+using SampleApiWebApp.Infrastructure;
 
 namespace SampleApiWebApp.Controllers.Teams
 {
@@ -34,9 +36,13 @@ namespace SampleApiWebApp.Controllers.Teams
         [Produces(ContentTypes.ApplicationJson)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400, Type = typeof(ValidationProblemDetails))]
-        public Task<IActionResult> Post(CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Post(
+            [FromBody] PostTeamCommand request,
+            CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var result = await this.mediator.Send(request, cancellationToken);
+
+            return result.ToActionResult();
         }
 
         [HttpPut]
