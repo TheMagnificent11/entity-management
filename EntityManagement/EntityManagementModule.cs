@@ -20,6 +20,7 @@ namespace EntityManagement
 
             builder.RegisterType<T>()
                 .Keyed<IDatabaseContext>(key)
+                .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
         }
     }
