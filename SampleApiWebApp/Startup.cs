@@ -33,9 +33,9 @@ namespace SampleApiWebApp
 
         public static void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterLogger();
-            builder.RegisterSource(new ContravariantRegistrationSource());
-            builder.RegisterModule(new EntityManagementModule<DatabaseContext>());
+            _ = builder.RegisterLogger();
+            _ = builder.RegisterSource(new ContravariantRegistrationSource());
+            _ = builder.RegisterModule(new EntityManagementModule<DatabaseContext>());
             ConfigureMediatr(builder);
         }
 
