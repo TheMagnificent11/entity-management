@@ -1,4 +1,5 @@
-﻿using EntityManagement.Core;
+﻿using System;
+using EntityManagement.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,7 +21,7 @@ namespace EntityManagement
         {
             if (builder is null)
             {
-                throw new System.ArgumentNullException(nameof(builder));
+                throw new ArgumentNullException(nameof(builder));
             }
 
             builder.HasKey(i => i.Id);
