@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Autofac.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace EntityManagement
@@ -19,15 +18,11 @@ namespace EntityManagement
         {
             var key = nameof(T);
 
-            builder.RegisterType<T>()
+            _ = builder.RegisterType<T>()
                 .Keyed<IDatabaseContext>(key)
+                .AsImplementedInterfaces()
+                .AsSelf()
                 .InstancePerLifetimeScope();
-
-            builder.RegisterGeneric(typeof(DatabaseContextScope<>))
-                .WithParameter(new ResolvedParameter(
-                    (info, context) => info.ParameterType == typeof(IDatabaseContext),
-                    (info, context) => context.ResolveKeyed<IDatabaseContext>(key)))
-                .As(typeof(IDatabaseContextScope<>));
         }
     }
 }
