@@ -1,9 +1,7 @@
-using System.Reflection;
 using Autofac;
-using Autofac.Features.Variance;
-using AutofacSerilogIntegration;
 using AutoMapper;
 using EntityManagement;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SampleApiWebApp.Data;
 using SampleApiWebApp.Infrastructure;
-using Serilog.Events;
 
 namespace SampleApiWebApp
 {
@@ -32,10 +29,22 @@ namespace SampleApiWebApp
 
         public static void ConfigureContainer(ContainerBuilder builder)
         {
-            _ = builder.RegisterLogger();
-            _ = builder.RegisterSource(new ContravariantRegistrationSource());
             _ = builder.RegisterModule(new EntityManagementModule<DatabaseContext>());
-            _ = builder.RegisterModule(new MediationModule(new Assembly[] { typeof(Startup).Assembly }));
+        }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContextPool<DatabaseContext>(options =>
+                options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddAutoMapper(typeof(Startup).Assembly);
+
+            services.AddControllers(options => options.Filters.Add(new ExceptionFilter()))
+                .AddFluentValidation(options => options.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
+
+            services.ConfigureProblemDetails();
+
+            services.ConfigureSwagger(ApiName, this.apiVersions);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -63,32 +72,6 @@ namespace SampleApiWebApp
             app.ConfigureSwagger(ApiName, this.apiVersions);
 
             app.MigrationDatabase<DatabaseContext>();
-        }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            var logEventLevel = LogEventLevel.Information;
-
-#if DEBUG
-            logEventLevel = LogEventLevel.Debug;
-#endif
-
-            services.ConfigureLogging(
-                this.configuration,
-                logEventLevel,
-                this.configuration["SeqSettings:Uri"],
-                this.configuration["SeqSettings:Key"]);
-
-            services.AddDbContextPool<DatabaseContext>(options =>
-                options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddAutoMapper(typeof(Startup).Assembly);
-
-            services.AddControllers(options => options.Filters.Add(new ExceptionFilter()));
-
-            services.ConfigureProblemDetails();
-
-            services.ConfigureSwagger(ApiName, this.apiVersions);
         }
     }
 }
