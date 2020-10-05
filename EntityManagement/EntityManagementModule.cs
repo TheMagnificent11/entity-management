@@ -18,9 +18,10 @@ namespace EntityManagement
         {
             var key = nameof(T);
 
-            builder.RegisterType<T>()
+            _ = builder.RegisterType<T>()
                 .Keyed<IDatabaseContext>(key)
                 .AsImplementedInterfaces()
+                .AsSelf()
                 .InstancePerLifetimeScope();
         }
     }
