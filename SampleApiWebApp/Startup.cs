@@ -4,7 +4,6 @@ using Autofac.Features.Variance;
 using AutofacSerilogIntegration;
 using AutoMapper;
 using EntityManagement;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +35,7 @@ namespace SampleApiWebApp
             _ = builder.RegisterLogger();
             _ = builder.RegisterSource(new ContravariantRegistrationSource());
             _ = builder.RegisterModule(new EntityManagementModule<DatabaseContext>());
-            ConfigureMediatr(builder);
+            _ = builder.RegisterModule(new MediationModule(new Assembly[] { typeof(Startup).Assembly }));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -90,22 +89,6 @@ namespace SampleApiWebApp
             services.ConfigureProblemDetails();
 
             services.ConfigureSwagger(ApiName, this.apiVersions);
-        }
-
-        private static void ConfigureMediatr(ContainerBuilder builder)
-        {
-            builder
-                .RegisterType<Mediator>()
-                .As<IMediator>()
-                .InstancePerLifetimeScope();
-
-            builder.Register<ServiceFactory>(context =>
-            {
-                var c = context.Resolve<IComponentContext>();
-                return t => c.Resolve(t);
-            });
-
-            builder.RegisterAssemblyTypes(typeof(Startup).GetTypeInfo().Assembly).AsImplementedInterfaces();
         }
     }
 }
