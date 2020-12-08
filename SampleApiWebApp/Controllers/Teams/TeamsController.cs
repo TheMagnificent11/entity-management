@@ -3,12 +3,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using EntityManagement;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SampleApiWebApp.Constants;
+using SampleApiWebApp.Data;
 using SampleApiWebApp.Data.Queries;
 using SampleApiWebApp.Domain;
 
@@ -18,12 +18,12 @@ namespace SampleApiWebApp.Controllers.Teams
     [Route("[controller]")]
     public sealed class TeamsController : Controller
     {
-        private readonly IDatabaseContext databaseContext;
+        private readonly IDbContextFactory<DatabaseContext> contextFactory;
         private readonly IMapper mapper;
 
-        public TeamsController(IDatabaseContext databaseContext, IMapper mapper)
+        public TeamsController(IDbContextFactory<DatabaseContext> contextFactory, IMapper mapper)
         {
-            this.databaseContext = databaseContext;
+            this.contextFactory = contextFactory;
             this.mapper = mapper;
         }
 
@@ -35,16 +35,19 @@ namespace SampleApiWebApp.Controllers.Teams
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetOne([FromRoute] long id, CancellationToken cancellationToken = default)
         {
-            var team = await this.LookupTeamId(id, cancellationToken);
-
-            if (team == null)
+            using (var context = this.contextFactory.CreateDbContext())
             {
-                return this.NotFound();
+                var team = await LookupTeamId(context, id, cancellationToken);
+
+                if (team == null)
+                {
+                    return this.NotFound();
+                }
+
+                var teamResponse = this.mapper.Map<Team>(team);
+
+                return this.Ok(teamResponse);
             }
-
-            var teamResponse = this.mapper.Map<Team>(team);
-
-            return this.Ok(teamResponse);
         }
 
         [HttpPost]
@@ -56,15 +59,17 @@ namespace SampleApiWebApp.Controllers.Teams
             [FromBody] TeamRequest request,
             CancellationToken cancellationToken = default)
         {
-            var team = await this.GenerateAndValidateDomainEntity(request, cancellationToken);
+            using (var context = this.contextFactory.CreateDbContext())
+            {
+                var team = await GenerateAndValidateDomainEntity(context, request, cancellationToken);
 
-            this.databaseContext
-                .EntitySet<Domain.Team>()
-                .Add(team);
+                context.Set<Domain.Team>()
+                    .Add(team);
 
-            await this.databaseContext.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
 
-            return this.Ok(team.Id);
+                return this.Ok(team.Id);
+            }
         }
 
         [HttpPut]
@@ -79,18 +84,21 @@ namespace SampleApiWebApp.Controllers.Teams
             [FromBody] TeamRequest request,
             CancellationToken cancellationToken = default)
         {
-            var team = await this.LookupTeamId(id, cancellationToken);
-
-            if (team == null)
+            using (var context = this.contextFactory.CreateDbContext())
             {
-                return this.NotFound();
+                var team = await LookupTeamId(context, id, cancellationToken);
+
+                if (team == null)
+                {
+                    return this.NotFound();
+                }
+
+                await BindToDomainEntityAndValidate(context, team, request, cancellationToken);
+
+                await context.SaveChangesAsync(cancellationToken);
+
+                return this.Ok();
             }
-
-            await this.BindToDomainEntityAndValidate(team, request, cancellationToken);
-
-            await this.databaseContext.SaveChangesAsync(cancellationToken);
-
-            return this.Ok();
         }
 
         private static void ThrowTeamWithSameNameException(ITeam request)
@@ -99,27 +107,34 @@ namespace SampleApiWebApp.Controllers.Teams
             throw new ValidationException(new ValidationFailure[] { error });
         }
 
-        private async Task<Domain.Team> LookupTeamId(long id, CancellationToken cancellationToken)
+        private static async Task<Domain.Team> LookupTeamId(
+            DatabaseContext context,
+            long id,
+            CancellationToken cancellationToken)
         {
-            return await this.databaseContext
-                .EntitySet<Domain.Team>()
+            return await context
+                .Set<Domain.Team>()
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
-        private async Task<Domain.Team[]> LookupTeamByName(ITeam request, CancellationToken cancellationToken)
+        private static async Task<Domain.Team[]> LookupTeamByName(
+            DatabaseContext context,
+            ITeam request,
+            CancellationToken cancellationToken)
         {
-            return await this.databaseContext
-                .EntitySet<Domain.Team>()
+            return await context
+                .Set<Domain.Team>()
                 .GetTeamsByName(request.Name)
                 .ToArrayAsync(cancellationToken);
         }
 
-        private async Task<Domain.Team> GenerateAndValidateDomainEntity(
+        private static async Task<Domain.Team> GenerateAndValidateDomainEntity(
+            DatabaseContext context,
             TeamRequest request,
             CancellationToken cancellationToken)
         {
             var teamName = request.Name.Trim();
-            var teamsWithSameName = await this.LookupTeamByName(request, cancellationToken);
+            var teamsWithSameName = await LookupTeamByName(context, request, cancellationToken);
 
             if (teamsWithSameName.Any())
             {
@@ -129,7 +144,8 @@ namespace SampleApiWebApp.Controllers.Teams
             return Domain.Team.CreateTeam(teamName);
         }
 
-        private async Task BindToDomainEntityAndValidate(
+        private static async Task BindToDomainEntityAndValidate(
+            DatabaseContext context,
             Domain.Team domainEntity,
             TeamRequest request,
             CancellationToken cancellationToken)
@@ -144,7 +160,7 @@ namespace SampleApiWebApp.Controllers.Teams
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var teamsWithSameName = await this.databaseContext
+            var teamsWithSameName = await context
                 .EntitySet<Domain.Team>()
                 .GetTeamsByName(request.Name)
                 .ToArrayAsync(cancellationToken);
