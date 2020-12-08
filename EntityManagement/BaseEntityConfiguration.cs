@@ -33,6 +33,9 @@ namespace EntityManagement
             builder.Property(i => i.ModifiedBy)
                 .IsRequired()
                 .HasMaxLength(255);
+
+            builder.Property(i => i.Timestamp)
+                .IsRowVersion();
         }
     }
 }

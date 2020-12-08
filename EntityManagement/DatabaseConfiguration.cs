@@ -25,8 +25,12 @@ namespace EntityManagement
 
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
-                var dbContext = serviceScope.ServiceProvider.GetRequiredService<T>();
-                dbContext.Database.Migrate();
+                var factory = serviceScope.ServiceProvider.GetRequiredService<IDbContextFactory<T>>();
+
+                using (var context = factory.CreateDbContext())
+                {
+                    context.Database.Migrate();
+                }
             }
         }
     }
