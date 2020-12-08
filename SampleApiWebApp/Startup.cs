@@ -29,8 +29,8 @@ namespace SampleApiWebApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextFactory<DatabaseContext>(options =>
-                options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
+            services.ConfigureDatabaseContextAndFactory<DatabaseContext>(
+                this.configuration.GetConnectionString("DefaultConnection"));
 
             services.AddAutoMapper(typeof(Startup).Assembly);
 
@@ -41,7 +41,8 @@ namespace SampleApiWebApp
 
             services.ConfigureSwagger(ApiName, this.apiVersions);
 
-            services.AddHealthChecks();
+            services.AddHealthChecks()
+                .AddDbContextCheck<DatabaseContext>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
