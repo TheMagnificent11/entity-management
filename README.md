@@ -2,6 +2,10 @@
 
 EF Core database context abstraction.
 
+## Build Status
+
+![.NET Core](https://github.com/TheMagnificent11/entity-management/workflows/.NET%20Core/badge.svg)
+
 ## Dependencies
 
 - .Net Standard 2.1
