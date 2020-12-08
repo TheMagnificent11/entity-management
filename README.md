@@ -14,7 +14,7 @@ EF Core database context abstraction.
    - See [Team.cs](SampleApiWebApp/Domain/Team.cs)
 2. Create fluent configurations for each of these data models by inheriting `EntityManagement.BaseEntityConfiguration<TEntity, TId>` for each entity.
    - See [TeamConfiguration.cs](SampleApiWebApp/Data/Configuration/TeamConfiguration.cs)
-3. Implement database context by inheriting `Microsoft.EntityFrameworkCore.DbContext` (ensure the configurations created in step ).
+3. Implement database context by inheriting `Microsoft.EntityFrameworkCore.DbContext` (ensure the configurations created in step 2 are added in the `OnModelCreating` method).
    - See [DatabaseContext.cs](SampleApiWebApp/Data/DatabaseContext.cs)
 4. Create database context design-time factory.
    - See [DatabaseContextFactory.cs](SampleApiWebApp/Data/DatabaseContextFactory.cs)
