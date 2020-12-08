@@ -10,7 +10,6 @@
     <Product>EntityManagement</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <DocumentationFile>bin\netstandard2.0\EntityManagment.xml</DocumentationFile>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>
       $(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb
@@ -19,6 +18,7 @@
     <WarningsAsErrors />
     <CodeAnalysisRuleSet>..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <LangVersion>8.0</LangVersion>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

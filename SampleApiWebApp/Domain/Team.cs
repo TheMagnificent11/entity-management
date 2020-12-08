@@ -11,9 +11,7 @@ namespace SampleApiWebApp.Domain
     {
         public string Name { get; protected set; }
 
-#pragma warning disable CA2227 // Collection properties should be read only
         public IList<Player> Players { get; protected set; }
-#pragma warning restore CA2227 // Collection properties should be read only
 
         public static Team CreateTeam(string teamName)
         {
