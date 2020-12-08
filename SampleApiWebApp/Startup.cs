@@ -27,15 +27,10 @@ namespace SampleApiWebApp
             this.configuration = configuration;
         }
 
-        public static void ConfigureContainer(ContainerBuilder builder)
-        {
-            _ = builder.RegisterModule(new EntityManagementModule<DatabaseContext>());
-        }
-
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<DatabaseContext>(options =>
-                options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
+            services.ConfigureDatabaseContextAndFactory<DatabaseContext>(
+                this.configuration.GetConnectionString("DefaultConnection"));
 
             services.AddAutoMapper(typeof(Startup).Assembly);
 
@@ -45,6 +40,9 @@ namespace SampleApiWebApp
             services.ConfigureProblemDetails();
 
             services.ConfigureSwagger(ApiName, this.apiVersions);
+
+            services.AddHealthChecks()
+                .AddDbContextCheck<DatabaseContext>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -67,6 +65,7 @@ namespace SampleApiWebApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
 
             app.ConfigureSwagger(ApiName, this.apiVersions);

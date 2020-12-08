@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using EntityManagement;
 using Microsoft.EntityFrameworkCore;
 using SampleApiWebApp.Data.Configuration;
 using SampleApiWebApp.Domain;
 
 namespace SampleApiWebApp.Data
 {
-    public sealed class DatabaseContext : DbContext, IDatabaseContext
+    public sealed class DatabaseContext : DbContext
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options)
