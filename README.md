@@ -8,8 +8,8 @@ EF Core database context abstraction.
 
 ## Dependencies
 
-- .Net Standard 2.1
-- Entity Framework Core 5
+- .Net 6
+- Entity Framework Core 6
 - Autofac 6.x.x
 
 ## How To Use
