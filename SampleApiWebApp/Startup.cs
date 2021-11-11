@@ -1,5 +1,3 @@
-using Autofac;
-using AutoMapper;
 using EntityManagement;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
