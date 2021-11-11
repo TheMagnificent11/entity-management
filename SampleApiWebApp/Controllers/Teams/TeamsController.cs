@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,7 +29,23 @@ namespace SampleApiWebApp.Controllers.Teams
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Produces(ContentTypes.ApplicationJson)]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Team>))]
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        {
+            using (var context = this.contextFactory.CreateDbContext())
+            {
+                var teams = await context
+                    .Set<Domain.Team>()
+                    .ToListAsync(cancellationToken);
+
+                var teamsResponse = this.mapper.Map<IEnumerable<Team>>(teams);
+
+                return this.Ok(teamsResponse);
+            }
+        }
+
+        [HttpGet("{id}")]
         [Consumes(ContentTypes.ApplicationJson)]
         [Produces(ContentTypes.ApplicationJson)]
         [ProducesResponseType(200, Type = typeof(Team))]
@@ -72,8 +89,7 @@ namespace SampleApiWebApp.Controllers.Teams
             }
         }
 
-        [HttpPut]
-        [Route("{id}")]
+        [HttpPut("{id}")]
         [Consumes(ContentTypes.ApplicationJson)]
         [Produces(ContentTypes.ApplicationJson)]
         [ProducesResponseType(200)]
